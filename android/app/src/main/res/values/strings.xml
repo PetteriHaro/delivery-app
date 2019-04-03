@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">mernNative</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoicGV0dGVyaWhhcm8iLCJhIjoiY2p0b2J5aHBiMDI2dDN5bGYzbWRubTU2bCJ9.mYw4HBfHDmVCKxYu9ITWvQ</string>
+</resources>
