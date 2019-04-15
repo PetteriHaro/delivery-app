@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     View,
     StyleSheet,
-    AsyncStorage,
+    Text
 } from 'react-native';
 import {connect} from 'react-redux'
 
@@ -27,62 +27,11 @@ class Login extends Component {
     }
 
     loginHandler = () => {
-        let email = this.state.controls.email.value;
-        let password = this.state.controls.password.value;
-        this.props.startLoading()
-        fetch("http://localhost:5000/auth/login", {
-            method: "POST",
-            body: JSON.stringify({
-                email: email, 
-                password: password
-            }),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(res => {
-            if (res.status === 422) {
-                return res.json()
-                .then(parsedRes => {
-                    this.props.stopLoading()
-                    return this.setState({error: parsedRes.data[0].msg})
-                })
-            }
-            if (res.status === 401) {
-                return res.json()
-                .then(parsedRes => {
-                    this.props.stopLoading()
-                    console.log(parsedRes)
-                    return this.setState({error: parsedRes.message})
-                })
-            }
-            return res.json()
-        })
-        .then(parsedRes => {
-            if (parsedRes) {
-                return AsyncStorage.multiSet([
-                    ["token", parsedRes.token],
-                    ["email", parsedRes.email],
-                    ["userId", parsedRes.userId] 
-                ])
-                .then(result => {
-                    let user = {
-                        name: parsedRes.name,
-                        email: parsedRes.email,
-                        userId: parsedRes.userId,                   
-                    }
-                    this.props.stopLoading()
-                    return this.props.navigation.navigate("Home", {user: user})
-                })
-            }            
-        })
-        .catch(err => {
-            this.setState({
-                error: "We are experiencing problems. Try again later.",
-                isLoading: false
-            })
-            console.log(err)
-        })
+        let userData = {
+            email: this.state.controls.email.value,
+            password: this.state.controls.password.value
+        }
+        this.props.onLogin(userData)
     }
 
     toSignUpScreen = () => {
@@ -108,6 +57,7 @@ class Login extends Component {
             <View style={styles.container}>
                 <TopImage src={DelivetyMan} height="30%"/>
                 <Header>Login</Header>
+                <Text>{this.props.errorMessage}</Text>
                 <LoginForm 
                     toSignUpScreen={this.toSignUpScreen}
                     loginHandler={this.loginHandler}
@@ -115,6 +65,12 @@ class Login extends Component {
                     onChangeText={this.changeTextHandler}
                     error={this.state.error}
                     isLoading={this.props.isLoading} />
+                <Text onPress={this.props.continueWithoutLogin} style={{
+                    textDecorationStyle: "solid", 
+                    textDecorationColor: "black",
+                }}>
+                    Continue Without Login
+                </Text>    
             </View>
         )
     }
@@ -129,13 +85,16 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-      isLoading: state.ui.isLoading
+      isLoading: state.ui.isLoading,
+      errorMessage: state.error.errorMessage
     }
   }
   const mapDispatchToProps = dispatch => {
     return {
       startLoading: () => dispatch(actions.uiStartLoading()),
-      stopLoading: () => dispatch(actions.uiStopLoading())
+      stopLoading: () => dispatch(actions.uiStopLoading()),
+      onLogin: (userData) => dispatch(actions.login(userData)),
+      continueWithoutLogin: () => dispatch(actions.continueWithoutLogin())
     }
   }  
 

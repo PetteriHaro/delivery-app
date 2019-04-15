@@ -13,5 +13,8 @@ export {
 
 export {
     setUser,
-    signup
+    signup,
+    login,
+    autoLogin,
+    continueWithoutLogin
 } from './auth'

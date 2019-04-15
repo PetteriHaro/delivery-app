@@ -3,9 +3,7 @@ import {
     View,
     StyleSheet,
     Animated,
-    ActivityIndicator
 } from 'react-native';
-import stripe from 'tipsi-stripe'
 import {connect} from 'react-redux'
 
 import SignupForm from '../../components/Auth/SignupForm/SignupForm';

@@ -5,6 +5,7 @@ import {
     Animated,
     Dimensions,
 } from 'react-native';
+import {connect} from 'react-redux'
 
 import DrawerIcon from '../components/DrawerIcon/DrawerIcon';
 import CornerShape from '../components/Home/CornerShape/CornerShape';
@@ -12,6 +13,7 @@ import Form from '../components/Home/Form/Form';
 import Header from '../components/Home/Header/Header';
 import CarDialogue from '../components/Home/CarDialogue/CarDialogue';
 import UserName from '../components/Home/Name/Name';
+
 
 const {width, height} = Dimensions.get("window")
 
@@ -50,7 +52,7 @@ class Home extends Component {
             },
             anim: new Animated.Value(0),
             zIndex: new Animated.Value(-10),
-            user: params.user
+            user: this.props.user
         })
     }
 
@@ -249,7 +251,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flex: 1,
     },
-    
 })
 
-export default Home;
+const mapStateToProps = state => {
+    return {
+        user: state.auth
+    }
+}
+
+export default connect(mapStateToProps)(Home);

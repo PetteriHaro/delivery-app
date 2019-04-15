@@ -3,7 +3,8 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
     name: null,
     userId: null,
-    orders: []
+    orders: [],
+    email: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +14,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 name: action.user.name,
                 userId: action.user.userId,
-                orders: action.user.orders
+                orders: action.user.orders,
+                email: action.user.email
             }
         }
         default:
